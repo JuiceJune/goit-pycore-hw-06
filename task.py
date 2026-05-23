@@ -13,12 +13,17 @@ class Name(Field):
 
 class Phone(Field):
     def __init__(self, value):
-        self.validate_value(value)
         super().__init__(value)
 
-    def validate_value(self, value):
-         if not re.fullmatch(r"^\d{10}$", value):
+    @property
+    def value(self):
+        return self._value
+
+    @value.setter
+    def value(self, value):
+        if not re.fullmatch(r"^\d{10}$", value):
             raise ValueError(f"Invalid phone number: {value}")
+        self._value = value
 
 class Record:
     def __init__(self, name):
@@ -73,4 +78,9 @@ class AddressBook(UserDict):
     def delete(self, name: str):
         if name in self.data:
             del self.data[name]
-        
+
+
+book = AddressBook()
+record = Record("Oleg")
+record.add_phone("1234567890")
+record.edit_phone("1234567890", "1234567891")
